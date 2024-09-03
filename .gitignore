@@ -1,0 +1,74 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.swp
+
+# Django Migrations
+**/migrations/
+
+# Environment Variables
+.env
+
+# Database
+*.sqlite3
+/postgres/
+
+# Media
+media/
+
+# Logs
+*.log
+
+# Caches
+**/__pycache__/
+**/*.py[cod]
+*.mypy_cache/
+**/.mypy_cache/
+**/.cache/
+**/.pytest_cache/
+
+# Django Static and Media
+staticfiles/
+media/
+
+# IDEs
+# PyCharm
+.idea/
+*.idea/*
+*.iml
+*.ipr
+*.iws
+
+# VSCode
+.vscode/
+
+# Visual Studio
+.vs/
+*.vscode/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Backup files
+*.bak
+*.tmp
+*.old
+
+# Virtual Environment
+venv/
+env/
+ENV/

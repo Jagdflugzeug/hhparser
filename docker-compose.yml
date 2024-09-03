@@ -1,0 +1,75 @@
+networks:
+  hhparser:
+
+services:
+  postgres:
+    image: postgres:16
+    ports:
+      - 5438:5432
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    restart: always
+    environment:
+      POSTGRES_DB: ${PG_DB}
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      command: postgres -c shared_buffers=512MB -c effective_cache_size=1536MB -c work_mem=2621kB -c maintenance_work_mem=128MB -c log_statement=all -c logging_collector=on
+      shm_size: '1gb'
+    networks:
+      - hhparser
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100k"
+        max-file: "1"
+
+  web:
+    env_file:
+      .env
+    build:
+      context: hhpAdmin
+    restart: always
+    networks:
+      - hhparser
+    command: python3 manage.py runserver 0.0.0.0:6700
+    ports:
+      - 6700:6700
+    volumes:
+      - ./hhpAdmin:/deploy
+    depends_on:
+      - postgres
+    environment:
+      PYTHONUNBUFFERED: 1
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      POSTGRES_DB: ${PG_DB}
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100k"
+        max-file: "1"
+
+  parser:
+    env_file:
+      .env
+    build:
+      context: ./parser
+    restart: always
+    networks:
+      - hhparser
+    command: python3 ./src/main.py
+    volumes:
+      - ./parser:/deploy
+    depends_on:
+      - postgres
+    environment:
+      PYTHONUNBUFFERED: 1
+      POSTGRES_DB: ${PG_DB}
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100k"
+        max-file: "1"
